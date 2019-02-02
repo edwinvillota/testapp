@@ -12,6 +12,7 @@
     "react-native": "0.58.3",
     "react-native-camera": "^1.9.2",
     "react-native-fs": "^2.13.3",
+    "react-native-grid-component": "^1.1.0",
     "react-native-image-picker": "^0.28.0"
   },
   "devDependencies": {

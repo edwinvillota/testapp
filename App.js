@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   contentContainer: {
-    paddingVertical: 20
+    paddingVertical: 20,
+    backgroundColor: 'black'
   }
 });
