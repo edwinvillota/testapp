@@ -1,55 +1,14 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
- */
+import { createStackNavigator, createAppContainer } from 'react-navigation'
 
-import React, {Component} from 'react';
-import {
-  Platform, 
-  StyleSheet, 
-  Text, 
-  View,
-  TextInput,
-  Button,
-  TouchableOpacity,
-  ScrollView
-} from 'react-native';
-import Camera from './components/camera'
-import ImagePicker from 'react-native-image-picker'
+// Pages imports
+import HomePage from './components/HomePage'
+import NewPage from './components/NewPage'
+import AboutPage from './components/AboutPage'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const AppNavigator = createStackNavigator({
+  Home: { screen: HomePage },
+  New: { screen: NewPage },
+  About: { screen: AboutPage }
+})
 
-type Props = {};
-export default class App extends Component<Props> {
-
-  render() {
-    return (
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <View style={styles.container}>
-          <Camera />
-        </View>
-      </ScrollView>
-    )
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: 'black',
-  },
-  contentContainer: {
-    paddingVertical: 20,
-    backgroundColor: 'black'
-  }
-});
+export default createAppContainer(AppNavigator)

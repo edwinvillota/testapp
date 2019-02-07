@@ -4,40 +4,18 @@ import {
     StyleSheet,
     Text,
     View,
-		TouchableOpacity,
 		Button,
     Image,
     TextInput
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
 import { Dimensions } from 'react-native'
+import config from '../config/index'
 
 const RNFS = require('react-native-fs')
+const HOMEDIR = `${RNFS.ExternalStorageDirectoryPath}/${config.MAIN_FOLDER}`
 
-const dirhome = `${RNFS.ExternalStorageDirectoryPath}/Picscapture`
-const photos = [
-  { name: 'Acta', code: 1, require: true },
-  { name: 'Medidor', code: 2, require: true },
-  { name: 'Fachada', code: 3, require: true },
-  { name: 'Puesta a tierra', code: 4, require: false },
-  { name: 'Acometida', code: 5, require: false },
-  { name: 'Lectura Activa', code: 6, require: true },
-  { name: 'Lectura Reactiva', code: 7, require: true },
-  { name: 'Sello Tapa Principal 1', code: 8, require: true },
-  { name: 'Sello Tapa Principal 2', code: 9, require: true },
-  { name: 'Sello Tapa Bornera', code: 10, require: true },
-  { name: 'Sello Caja', code: 11, require: true },
-  { name: 'Sticker Cedenar', code: 12, require: true },
-  { name: 'Medidor Calibrado', code: 13, require: true },
-  { name: 'Medidor en Caja', code: 14, require: true },
-  { name: 'Altura de Medidor', code: 15, require: true },
-  { name: 'Medidor Instalado', code: 16, require: true },
-  { name: 'Cedula 1', code: 17, require: false },
-  { name: 'Cedula 2', code: 18, require: false },
-  { name: 'Fachada Despues', code: 19, require: true },
-]
 let width = Dimensions.get('window').width
-let height = Dimensions.get('window').height
 
 class Camera extends Component {
 	constructor(){
@@ -68,7 +46,7 @@ class Camera extends Component {
 
     const date = new Date()
     const dateFolder = `${date.getDay()}-${date.getMonth()+1}-${date.getFullYear()}`
-    RNFS.mkdir(`${dirhome}/${dateFolder}`)
+    RNFS.mkdir(`${HOMEDIR}/${dateFolder}`)
     const options = {
       title: 'Select Avatar',
       customButtons: [{ name: 'fb', title: 'Choose Photo from Facebook' }],
@@ -79,7 +57,7 @@ class Camera extends Component {
     }
     ImagePicker.launchCamera(options, (response) => {
       if(!response.didCancel) {
-        photo.path = `${dirhome}/${dateFolder}/${this.state.id}(${photo.code}).jpg`
+        photo.path = `${HOMEDIR}/${dateFolder}/${this.state.id}(${photo.code}).jpg`
         photo.uri = response.uri
         photo.data = response.data
         RNFS.moveFile(response.path, photo.path)
@@ -98,10 +76,11 @@ class Camera extends Component {
   }
   
   render() {
+    const photoList = config.REQUIRE_PHOTOS
     width = Dimensions.get('window').width
     height = Dimensions.get('window').height
     let midWidth = (width / 2)
-    const buttons = photos.map((p, i) => {
+    const buttons = photoList.map((p, i) => {
       return (
         <View style={{width: midWidth, padding: 5}} key={i}>
           <Button 
