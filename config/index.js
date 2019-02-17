@@ -19,6 +19,7 @@ const config = {
         { name: 'Cedula 1', code: 17, require: false },
         { name: 'Cedula 2', code: 18, require: false },
         { name: 'Fachada Despues', code: 19, require: true },
+        { name: 'Prueba de fuga', code: 20, require: true}
     ],
     MAIN_FOLDER: 'FotosMEC'
 }

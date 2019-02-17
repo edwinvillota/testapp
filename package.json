@@ -11,6 +11,7 @@
     "react": "16.6.3",
     "react-native": "0.58.3",
     "react-native-camera": "^1.9.2",
+    "react-native-dialog": "^5.5.0",
     "react-native-fs": "^2.13.3",
     "react-native-gesture-handler": "^1.0.15",
     "react-native-grid-component": "^1.1.0",

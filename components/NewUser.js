@@ -3,13 +3,13 @@ import {
 	AppRegistry,
     StyleSheet,
     View,
-    Text,
-    Image
+    AsyncStorage
 } from 'react-native'
 import IdVerificator from './IdVerificator'
 import CaptureButtons from './CaptureButtons'
+import ValidatePhotos from './ValidatePhotos'
 import config from '../config/index'
-import PhotoCarousel from './PhotoCarousel'
+//import PhotoCarousel from './PhotoCarousel'
 import ImagesGrid from './ImagesGrid'
 
 class NewUser extends Component {
@@ -29,8 +29,26 @@ class NewUser extends Component {
             p.path = ''
             return p
         })
+
         this.setState({
             userPhotos: photosState
+        })
+    }
+
+    saveState = async () => {
+        try {
+            await AsyncStorage.setItem(`${this.state.userId}`, JSON.stringify(this.state))
+        } catch (error) {
+            alert(error.toString())
+        }
+    }
+
+    restoreState = newState => {
+        this.setState(newState, () => {
+            const filter = this.state.userPhotos.filter(p => p.code === 1)
+            let modPhoto = filter[0]
+            modPhoto.restore = true
+            this.handleChangePhotoState(modPhoto)
         })
     }
 
@@ -46,15 +64,20 @@ class NewUser extends Component {
         })
     }
 
+
     handleChangePhotoState = newPhoto => {
         const newUserPhotos = this.state.userPhotos.map(up => {
             if (up.name === newPhoto.name) {
-                up.captured = true
+                if (!newPhoto.restore) {
+                    up.captured = true
+                } 
             }
             return up
         })
         this.setState({
             userPhotos: newUserPhotos
+        }, () => {
+            this.saveState()
         })
     }
 
@@ -66,6 +89,7 @@ class NewUser extends Component {
                     changeId={this.handleChangeId}
                     changeUserFolder={this.handleChangeUserFolder}
                     navigation={this.props.navigation}
+                    restoreState={this.restoreState}
                     />
                 <CaptureButtons
                     userId={this.state.userId}
@@ -77,6 +101,11 @@ class NewUser extends Component {
                 <ImagesGrid 
                     photos={this.state.userPhotos}
                     visible={(this.state.userFolder.length > 0)}
+                />
+                <ValidatePhotos 
+                    photos={this.state.userPhotos}
+                    visible={(this.state.userFolder.length > 0)}
+                    navigation={this.props.navigation}
                 />
             </View>
         )
@@ -99,7 +128,10 @@ styles = StyleSheet.create({
     hide: {
         display: 'none'
     },
- 
+    validateButton: {
+        backgroundColor: '#038be4',
+        height: 30
+    }
 })
 
 export default NewUser

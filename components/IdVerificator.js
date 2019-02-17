@@ -6,9 +6,11 @@ import {
     Button,
     StyleSheet,
     Text,
-    Alert
+    Alert,
+    AsyncStorage
 } from 'react-native'
 import config from '../config/index'
+import Dialog from 'react-native-dialog'
 
 // Require file system
 const RNFS = require('react-native-fs')
@@ -19,12 +21,15 @@ class IdVerificator extends Component {
         this.state = {
             isValid: false,
             selectedId: false,
-            userFolder: ''
+            userFolder: '',
+            dialogVisible: false,
+            dialogDescription: 'Ingrese Nuevamente el Número del Acta',
+            validationId: 0,
         }
     }
 
     handleChange = newId => {
-        if (newId.trim().length === 5 && !isNaN(newId) && newId % 1 === 0) {
+        if (newId.trim().length === 6 && !isNaN(newId) && newId % 1 === 0) {
             this.props.changeId(newId)
             this.setState({
                 isValid: true
@@ -36,9 +41,29 @@ class IdVerificator extends Component {
         }
     }
 
+    showDialog = () => {
+        this.setState({
+            dialogVisible: true
+        })
+    }
+
+    validateId = () => {
+        if(this.state.validationId === this.props.id) {
+            this.setState({
+                dialogVisible: false
+            })
+            this.addNewUser()
+        } else {
+            this.setState({
+                dialogDescription: 'Error: Los números de Acta no Coinciden'
+            })
+        }
+    }
+
     addNewUser = () => {
         // Steps to verify the id
         // 1. Check if the is isValid
+
         // Steps to add new user
         // 1. Determine user pictures folder
         const date = new Date()
@@ -57,20 +82,56 @@ class IdVerificator extends Component {
                 } else {
                     Alert.alert(
                         'Confirmación',
-                        'La carpeta ya existe desea eliminarla?',
+                        'La carpeta ya existe',
                         [
                           {
-                            text: 'Cancelar',
-                            onPress: () => console.log('Cancel Pressed'),
+                            text: 'Eliminar',
+                            onPress: () => {
+                                RNFS.unlink(userFolder)
+                                AsyncStorage.removeItem(`${this.props.id}`)                                
+                                this.props.navigation.navigate('New')
+                            },
                             style: 'cancel',
                           },
-                          {text: 'OK', onPress: () => {
-                              RNFS.unlink(userFolder)
-                              this.props.navigation.navigate('New')
+                          {text: 'Editar', onPress: () => {
+                            AsyncStorage.getItem(`${this.props.id}`)
+                                .then(oldState => {
+                                    if(oldState !== null) {
+                                        const newState = JSON.parse(oldState)
+                                        newState.userFolder = userFolder
+                                        this.props.restoreState(newState)
+                                        this.setState({
+                                            selectedId: true
+                                        })
+                                    } else {
+                                      this.setState({
+                                          selectedId: true,
+                                          userFolder: userFolder
+                                      })
+                                      this.props.changeUserFolder(userFolder)
+                                    // Restore state from files 
+                                    // const validate = /^[0-9]{6}\([1-9]{1}[0-9]{0,1}\)(.jpg)$/
+                                    // const regId = /^[0-9]{6}/g
+                                    // const regCode = /\([1-9]{1}[0-9]{0,1}\)/g
+                                    // RNFS.readdir(userFolder)
+                                    //     .then(images => {
+                                    //         let paths = images.map(image => {
+                                    //             if (validate.test(image)) {
+                                    //                 let newPhoto = {
+                                    //                     code: image.match(regCode)[0].replace(/\(|\)/g, ''),
+                                    //                     path: `${userFolder}/${image}`
+                                    //                 }
+                                    //                 return newPhoto
+                                    //             }
+                                    //         })
+                                    //         alert(JSON.stringify(paths))
+                                    //     })
+                                    }              
+                                }) 
                             }},
                         ],
-                        {cancelable: false},
-                      );
+                        {cancelable: true},
+                      )
                 }
             })
     }
@@ -91,9 +152,22 @@ class IdVerificator extends Component {
                     disabled={!this.state.isValid || this.state.selectedId}
                     color='#02A974'
                     margin={5}
-                    onPress={this.addNewUser}
+                    onPress={this.showDialog}
                 />
-                <Text style={this.state.selectedId ? '' : styles.hide}>Carpeta: {this.state.userFolder}</Text>
+                <Dialog.Container visible={this.state.dialogVisible}>
+                    <Dialog.Title>Verificación de Acta</Dialog.Title>
+                    <Dialog.Description>
+                        {this.state.dialogDescription}
+                    </Dialog.Description>
+                    <Dialog.Input 
+                        label='Número de Acta'
+                        style={styles.textInput}
+                        keyboardType='number-pad'
+                        onChangeText={(value) => this.setState({validationId: value})}
+                    />
+                    <Dialog.Button label='Ingresar' onPress={this.validateId}/>
+                    <Dialog.Button label='Cancelar' onPress={() => {this.setState({dialogVisible: false})}}/>
+                </Dialog.Container>
             </View>
         )
     }
