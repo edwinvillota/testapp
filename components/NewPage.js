@@ -4,7 +4,7 @@ import NewUser from './NewUser'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Nueva Matricula',
+    title: 'Nueva Actividad',
     headerLeft: null,
     headerStyle: {
         backgroundColor: "#2F2F2F",

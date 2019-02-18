@@ -107,7 +107,7 @@ class CaptureButtons extends Component {
                 flexDirection: 'column',
                 flexWrap: 'wrap',
                 alignItems: 'flex-start',
-                height: 510,
+                height: 150,
                 display: visible
                 }}>
                 {buttons}

@@ -25,7 +25,7 @@ export default class HomePage extends React.Component {
       <View style={styles.container}>
         <View style={styles.row}>
             <Button
-            title="Nueva Matricula"
+            title="Nueva Actividad"
             color="#ED8005"
             style={styles.button}
             onPress={() => this.props.navigation.navigate('New')}

@@ -23,13 +23,13 @@ class IdVerificator extends Component {
             selectedId: false,
             userFolder: '',
             dialogVisible: false,
-            dialogDescription: 'Ingrese Nuevamente el Número del Acta',
+            dialogDescription: 'Ingrese Nuevamente el Número de Actividad',
             validationId: 0,
         }
     }
 
     handleChange = newId => {
-        if (newId.trim().length === 6 && !isNaN(newId) && newId % 1 === 0) {
+        if (newId.trim().length >= 4 && newId.trim().length <= 5 && !isNaN(newId) && newId % 1 === 0) {
             this.props.changeId(newId)
             this.setState({
                 isValid: true
@@ -55,7 +55,7 @@ class IdVerificator extends Component {
             this.addNewUser()
         } else {
             this.setState({
-                dialogDescription: 'Error: Los números de Acta no Coinciden'
+                dialogDescription: 'Error: Los números de Actividad no Coinciden'
             })
         }
     }
@@ -140,7 +140,7 @@ class IdVerificator extends Component {
         return (
             <View>
                 <TextInput 
-                    placeholder='Número de Acta'
+                    placeholder='Número de Actividad'
                     placeholderTextColor='#333'
                     onChangeText={this.handleChange}
                     keyboardType='number-pad'
@@ -160,7 +160,7 @@ class IdVerificator extends Component {
                         {this.state.dialogDescription}
                     </Dialog.Description>
                     <Dialog.Input 
-                        label='Número de Acta'
+                        label='Número de Actividad'
                         style={styles.textInput}
                         keyboardType='number-pad'
                         onChangeText={(value) => this.setState({validationId: value})}
