@@ -45,21 +45,41 @@ class CaptureBtn extends Component {
             },
         }
 
-        ImagePicker.launchCamera(options, (response) => {
-            if(!response.didCancel) {
-              newPhoto.path = `${this.props.userFolder}/${this.props.userId}(${newPhoto.code}).jpg`
-              newPhoto.uri = response.uri
-              RNFS.moveFile(response.path, newPhoto.path)
-                .then((a) => {
-                    newPhoto.captured = true
-                    this.props.changePhotoState(newPhoto)
-                    RNFS.unlink(response.path)
-                })
-                .catch(err => {
-                  alert('Error de mover archivo' + err)
-                })
-            }
-        })
+        if (newPhoto.capture) {
+            ImagePicker.launchCamera(options, (response) => {
+                if(!response.didCancel) {
+                  newPhoto.path = `${this.props.userFolder}/${this.props.userId}(${newPhoto.code}).jpg`
+                  newPhoto.uri = response.uri
+                  RNFS.moveFile(response.path, newPhoto.path)
+                    .then((a) => {
+                        newPhoto.captured = true
+                        this.props.changePhotoState(newPhoto)
+                        RNFS.unlink(response.path)
+                    })
+                    .catch(err => {
+                      alert('Error de mover archivo' + err)
+                    })
+                }
+            })
+        } else {
+            ImagePicker.launchImageLibrary(options, (response) => {
+                if(!response.didCancel) {
+                    newPhoto.path = `${this.props.userFolder}/${this.props.userId}(${newPhoto.code}).jpg`
+                    newPhoto.uri = response.uri
+                    RNFS.moveFile(response.path, newPhoto.path)
+                      .then((a) => {
+                          newPhoto.captured = true
+                          this.props.changePhotoState(newPhoto)
+                          RNFS.unlink(response.path)
+                      })
+                      .catch(err => {
+                        alert('Error de mover archivo' + err)
+                      })
+                  }
+            })
+        }
+
+        
     }
 
     render(){
@@ -107,7 +127,7 @@ class CaptureButtons extends Component {
                 flexDirection: 'column',
                 flexWrap: 'wrap',
                 alignItems: 'flex-start',
-                height: 510,
+                height: 650,
                 display: visible
                 }}>
                 {buttons}
