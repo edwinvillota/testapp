@@ -3,6 +3,7 @@ package com.testapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.jimmydaddy.imagemarker.ImageMarkerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.imagepicker.ImagePickerPackage;
 import org.reactnative.camera.RNCameraPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImageMarkerPackage(),
             new RNGestureHandlerPackage(),
             new ImagePickerPackage(),
             new RNCameraPackage(),

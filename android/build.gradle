@@ -31,6 +31,19 @@ allprojects {
     }
 }
 
+subprojects {
+    if (project.name.contains('react-native-image-marker')) {
+        buildscript{
+            repositories {
+                jcenter()
+                maven {
+                    url "https://dl.bintray.com/android/android-tools/"
+                }
+            }
+        }
+    }
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = '4.7'
     distributionUrl = distributionUrl.replace("bin", "all")

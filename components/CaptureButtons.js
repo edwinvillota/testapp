@@ -7,6 +7,7 @@ import {
     Button
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
+import ImageMarker from 'react-native-image-marker'
 import {Dimensions} from 'react-native'
 
 const RNFS = require('react-native-fs')
@@ -49,15 +50,45 @@ class CaptureBtn extends Component {
             if(!response.didCancel) {
               newPhoto.path = `${this.props.userFolder}/${this.props.userId}(${newPhoto.code}).jpg`
               newPhoto.uri = response.uri
-              RNFS.moveFile(response.path, newPhoto.path)
-                .then((a) => {
-                    newPhoto.captured = true
-                    this.props.changePhotoState(newPhoto)
-                    RNFS.unlink(response.path)
-                })
-                .catch(err => {
-                  alert('Error de mover archivo' + err)
-                })
+              const date = new Date()
+ 
+              ImageMarker.markText({
+                  src: {uri: `data:img/jpg;base64,${response.data}`},
+                  text: `${newPhoto.name} ${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()}`,
+                  position: 'bottomRight',
+                  color: '#FFFF00',
+                  fontName: 'Arial-BondItalicMT',
+                  fontSize: 44,
+                  scale: 1,
+                  quality: 100,
+                  shadowStyle: {
+                      dx: 1,
+                      dy: 1,
+                      radius: 1,
+                      color: '#FFFF00'
+                  }
+              }).then(res => {
+                RNFS.moveFile(res, newPhoto.path)
+                    .then((a) => {
+                        newPhoto.captured = true
+                        this.props.changePhotoState(newPhoto)
+                        RNFS.unlink(response.path)
+                    })
+                    .catch(err => {
+                      alert('Error de mover archivo' + err)
+                    })   
+              }).catch(err => {
+                  alert(err)
+              })
+            //   RNFS.moveFile(response.path, newPhoto.path)
+            //     .then((a) => {
+            //         newPhoto.captured = true
+            //         this.props.changePhotoState(newPhoto)
+            //         RNFS.unlink(response.path)
+            //     })
+            //     .catch(err => {
+            //       alert('Error de mover archivo' + err)
+            //     })
             }
         })
     }
