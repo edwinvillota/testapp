@@ -29,7 +29,7 @@ class IdVerificator extends Component {
     }
 
     handleChange = newId => {
-        if (newId.trim().length >= 4 && newId.trim().length <= 5 && !isNaN(newId) && newId % 1 === 0) {
+        if (newId.trim().length >= 7 && newId.trim().length <= 7 && !isNaN(newId) && newId % 1 === 0) {
             this.props.changeId(newId)
             this.setState({
                 isValid: true

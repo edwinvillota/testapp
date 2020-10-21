@@ -48,7 +48,7 @@ class CaptureBtn extends Component {
 
         ImagePicker.launchCamera(options, (response) => {
             if(!response.didCancel) {
-              newPhoto.path = `${this.props.userFolder}/${this.props.userId}(${newPhoto.code}).jpg`
+              newPhoto.path = `${this.props.userFolder}/${this.props.userId}_${newPhoto.code}.jpg`
               newPhoto.uri = response.uri
               const date = new Date()
  
@@ -138,7 +138,7 @@ class CaptureButtons extends Component {
                 flexDirection: 'column',
                 flexWrap: 'wrap',
                 alignItems: 'flex-start',
-                height: 150,
+                height: 230,
                 display: visible
                 }}>
                 {buttons}
