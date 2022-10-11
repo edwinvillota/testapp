@@ -9,7 +9,7 @@
   "dependencies": {
     "asap": "^2.0.6",
     "react": "16.6.3",
-    "react-native": "0.58.3",
+    "react-native": "0.70.2",
     "react-native-camera": "^1.9.2",
     "react-native-dialog": "^5.5.0",
     "react-native-fs": "^2.13.3",
